@@ -12,6 +12,7 @@ import boto3
 from boto3.dynamodb.conditions import Attr
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
+from flask_socketio import SocketIO
 
 from util import retrieveTable
 
@@ -32,6 +33,7 @@ usersTable = retrieveTable(USERS_TABLE_NAME)
 # MAIN DEFINITON.
 #################
 main = Blueprint('main', __name__)
+socketio = SocketIO()
 
 ###############################
 # INDEX (LANDING PAGE) HANDLER.
@@ -48,4 +50,13 @@ def index():
 @login_required
 def profile():
     # Grab the user's meme and return them to the client.
-    return render_template('profile.html', name=current_user.name)
+    return render_template('profile.html', name=current_user.name,
+                                            email=current_user.id)
+
+@socketio.on('connect', namespace='/profileWS')
+def onConnect():
+    print('Connected to client!')
+
+@socketio.on('disconnect', namespace='/profileWS')
+def onDisconnect():
+    print('Disconnected from client!')
