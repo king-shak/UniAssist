@@ -44,7 +44,8 @@ main = Blueprint('main', __name__)
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    if (current_user.is_authenticated): return redirect(url_for('main.profile'))
+    else: return render_template('index.html')
 
 @main.route('/nav')
 def nav():
@@ -56,7 +57,23 @@ def nav():
 
 @main.route('/budget')
 def budget():
-    return render_template('budget.html')
+    return render_template('coming-soon.html')
+
+################
+# NOTES HANDLER.
+################
+
+@main.route('/notes')
+def notes():
+    return render_template('coming-soon.html')
+
+###############
+# DEBT HANDLER.
+###############
+
+@main.route('/debt')
+def debt():
+    return render_template('coming-soon.html')
 
 ###################
 # CALENDAR HANDLER.
