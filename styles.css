@@ -88,7 +88,19 @@ body{
 .sidebar header{
     position: relative;
 }
-
+.sidebar ul li a{
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+.sidebar ul li a i{
+    height: 50px;
+    min-height: 50px;
+    border-radius: 12px;
+    line-height: 50px;
+    text-align: center;
+}
 .sidebar header .image-text{
     display: flex;
     align-items: center;
@@ -194,6 +206,7 @@ header .image-text .profession{
     border-radius: 6px;
     cursor: pointer;
 }
+
 .toggle-switch .switch{
     position: relative;
     height: 22px;
@@ -202,6 +215,7 @@ header .image-text .profession{
     background-color: var(--toggle-color);
     transition: var(--tran-05);
 }
+
 
 .switch::before{
     content: '';
