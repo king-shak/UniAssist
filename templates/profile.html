@@ -1,31 +1,6 @@
 
 <!-- templates/profile.html -->
 
-<script type="text/javascript" src="//cdn.socket.io/4.4.1/socket.io.min.js"></script>
-
-<script type="text/javascript">
-  console.log('Connecting to websocket...');
-  var socket = io();
-
-  socket.on('connect', function()
-  {
-    console.log('Successfully connected to server.');
-    socket.emit('updatePassword', JSON.stringify({'oldPassword': 'foo', 'newPassword': 'bar'}));
-    console.log('foo');
-  });
-
-  socket.on('updatePasswordStatus', function(data)
-  {
-    console.log('Got a message from the server: ' + data);
-    socket.emit('updatePassword', JSON.stringify({'oldPassword': 'foo', 'newPassword': 'bar'}));
-  });
-
-  socket.on('disconnect', function()
-  {
-    console.log('Disconnected from server.');
-  });
-</script>
-
 {% extends "base.html" %}
 
 {% block content %}

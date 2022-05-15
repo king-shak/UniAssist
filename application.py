@@ -7,7 +7,7 @@ from flask import Flask
 from flask_login import LoginManager
 
 from auth import usersTable, auth as auth_blueprint
-from main import socketio, main as main_blueprint
+from main import main as main_blueprint
 from models import User
 
 ############
@@ -39,9 +39,6 @@ def load_user(user_id):
 # Register blueprints.
 application.register_blueprint(auth_blueprint)
 application.register_blueprint(main_blueprint)
-
-# Initialize SocketIO with the application.
-socketio.init_app(application)
 
 # Run the app.
 if __name__ == '__main__':
