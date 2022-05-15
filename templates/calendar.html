@@ -51,7 +51,10 @@
 
     <p id="eventText"></p>
 
-    <!-- <button id="deleteButton">Delete</button> -->
+    <form action="/removeEvent" method="post">
+      <input type="hidden" id="deleteEventDate" name="dDate" />
+      <input type="submit" id="deleteButton" value="Delete" />
+    </form>
     <button id="closeButton">Close</button>
   </div>
 

@@ -97,6 +97,26 @@ def addEvent():
     # Redirect back to the calendar page.
     return redirect(url_for('main.calendar'))
 
+@main.route('/removeEvent', methods=['POST'])
+@login_required
+def removeEvent():
+    # Retrieve the data from the form.
+    date = request.form['dDate']
+
+    # Remove this event from the current list of events.
+    events = retrieveEvents(eventsTable, current_user.id)
+    events = [e for e in events if e['date'] != date]
+
+    # Update the table.
+    item = {
+        'email': current_user.id,
+        'events': events
+    }
+    eventsTable.put_item(Item = item)
+    
+    # Redirect back to the calendar page.
+    return redirect(url_for('main.calendar'))
+
 ################
 # TO-DO HANDLER.
 ################
