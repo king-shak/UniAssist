@@ -4,6 +4,7 @@
 ##########
 # IMPORTS.
 ##########
+from asyncio import events
 from crypt import methods
 import datetime
 import hashlib
@@ -17,7 +18,7 @@ from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
 from util import getCDNURLForS3Object, retrieveBucket, retrieveTable, getKeyFromCDNURL
-from constants import BUCKET_NAME, BUCKET_CDN_DOMAIN, PROFILE_PIC_ACL, USERS_TABLE_NAME, TASKS_TABLE_NAME, ALLOWED_EXTENSIONS, DEFAULT_PROFILE_PIC
+from constants import BUCKET_NAME, BUCKET_CDN_DOMAIN, PROFILE_PIC_ACL, USERS_TABLE_NAME, EVENTS_TABLE_NAME, TASKS_TABLE_NAME, ALLOWED_EXTENSIONS, DEFAULT_PROFILE_PIC
 
 ################
 # AWS RESOURCES.
@@ -30,6 +31,7 @@ bucket = retrieveBucket(s3, BUCKET_NAME)
 # Grab the tables.
 usersTable = retrieveTable(USERS_TABLE_NAME)
 tasksTable = retrieveTable(TASKS_TABLE_NAME)
+eventsTable = retrieveTable(EVENTS_TABLE_NAME)
 
 #################
 # MAIN DEFINITON.
@@ -60,9 +62,40 @@ def budget():
 # CALENDAR HANDLER.
 ###################
 
+def retrieveEvents(eventsTable, userID):
+    response = eventsTable.get_item(Key = {'email': userID})
+    events = None
+    if ('Item' in response): events = response['Item']['events']
+    if (events != None and len(events) == 0): events = None
+    return events
+
 @main.route('/calendar')
+@login_required
 def calendar():
-    return render_template('calendar.html')
+    return render_template('calendar.html', events=retrieveEvents(eventsTable, current_user.id))
+
+@main.route('/addEvent', methods=['POST'])
+@login_required
+def addEvent():
+    # Retrieve the data from the form.
+    title = request.form['title']
+    date = request.form['date']
+    newEvent = {'date': date, 'title': title}
+
+    # Add this event to the existing list of events.
+    events = retrieveEvents(eventsTable, current_user.id)
+    if (events == None): events = [newEvent]
+    else: events.append(newEvent)
+
+    # Update the table.
+    item = {
+        'email': current_user.id,
+        'events': events
+    }
+    eventsTable.put_item(Item = item)
+    
+    # Redirect back to the calendar page.
+    return redirect(url_for('main.calendar'))
 
 ################
 # TO-DO HANDLER.

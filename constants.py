@@ -15,6 +15,7 @@ PROFILE_PIC_ACL = 'public-read'
 
 USERS_TABLE_NAME = 'project-skyd-users-table'
 TASKS_TABLE_NAME = 'project-skyd-tasks-table'
+EVENTS_TABLE_NAME = 'project-skyd-events-table'
 
 ALLOWED_EXTENSIONS = {'.png', '.jpg'}
 

@@ -35,9 +35,14 @@
   <div id="newEventModal">
     <h2>New Event</h2>
 
-    <input id="eventTitleInput" placeholder="Event Title" />
+    <form action="/addEvent" method="post">
+      <input id="eventTitleInput" name="title" placeholder="Event Title" />
 
-    <button id="saveButton">Save</button>
+      <input type="hidden" id="eventDate" name="date" />
+
+      <input type="submit" id="saveButton" value="Save" />
+    </form>
+
     <button id="cancelButton">Cancel</button>
   </div>
 
@@ -46,12 +51,15 @@
 
     <p id="eventText"></p>
 
-    <button id="deleteButton">Delete</button>
+    <!-- <button id="deleteButton">Delete</button> -->
     <button id="closeButton">Close</button>
   </div>
 
   <div id="modalBackDrop"></div>
 
-  <script src="{{ url_for('static', filename='js/calendar-script.js') }}"></script>
+  <script type="text/javascript">
+    events = {{ events|tojson }};
+  </script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/calendar-script.js') }}"></script>
 </body>
 {% endblock %}
