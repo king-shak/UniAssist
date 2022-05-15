@@ -7,6 +7,7 @@
 import sys
 
 import boto3
+import botocore
 
 from constants import REGION_NAME, ROLE_ARN, ROLE_SESSION_NAME
 
