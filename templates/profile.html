@@ -5,11 +5,19 @@
 
 <script type="text/javascript">
   console.log('Connecting to websocket...');
-  var socket = io()//.connect('ws://project-skyd-env.eba-y9ksw232.us-west-2.elasticbeanstalk.com:8000/profileWS');
+  var socket = io();
 
   socket.on('connect', function()
   {
     console.log('Successfully connected to server.');
+    socket.emit('updatePassword', JSON.stringify({'oldPassword': 'foo', 'newPassword': 'bar'}));
+    console.log('foo');
+  });
+
+  socket.on('updatePasswordStatus', function(data)
+  {
+    console.log('Got a message from the server: ' + data);
+    socket.emit('updatePassword', JSON.stringify({'oldPassword': 'foo', 'newPassword': 'bar'}));
   });
 
   socket.on('disconnect', function()

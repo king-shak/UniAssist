@@ -6,13 +6,14 @@
 ##########
 import datetime
 import hashlib
+import json
 import os
 import random
 import boto3
 from boto3.dynamodb.conditions import Attr
 from flask import Blueprint, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 from util import retrieveTable
 
@@ -53,10 +54,15 @@ def profile():
     return render_template('profile.html', name=current_user.name,
                                             email=current_user.id)
 
-@socketio.on('connect', namespace='/profileWS')
+@socketio.on('connect')
 def onConnect():
     print('Connected to client!')
 
-@socketio.on('disconnect', namespace='/profileWS')
+@socketio.on('updatePassword')
+def updatePassword(data):
+    print(f'Received message from client: {data}')
+    emit('updatePasswordStatus', json.dumps({'success': True, 'msg': "Password was successfully updated!"}))
+
+@socketio.on('disconnect')
 def onDisconnect():
     print('Disconnected from client!')
