@@ -10,7 +10,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from main import BUCKET_CDN_DOMAIN, usersTable
+from main import BUCKET_CDN_DOMAIN, usersTable, eventsTable, tasksTable
 from util import getCDNURLForS3Object
 from models import User
 from constants import PASSWORD_HASH_METHOD, DEFAULT_PROFILE_PIC
@@ -70,6 +70,20 @@ def createUser(email, name, password):
         'joinDate': today.strftime("%b %d %Y"),
     }
     usersTable.put_item(Item = item)
+
+    # Create entries in all the other tables.
+    item = {
+        'email': email,
+        'events': []
+    }
+    eventsTable.put_item(Item = item)
+
+    item = {
+        'email': email,
+        'tasks': []
+    }
+    tasksTable.put_item(Item = item)
+
     return User(usersTable, email)
 
 @auth.route('/signup')
