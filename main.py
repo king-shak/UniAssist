@@ -52,6 +52,22 @@ def index():
 def budget():
     return render_template('budget.html')
 
+###################
+# CALENDAR HANDLER.
+###################
+
+@main.route('/calendar')
+def calendar():
+    return render_template('calendar.html')
+
+################
+# TO-DO HANDLER.
+################
+
+@main.route('/todo')
+def todo():
+    return render_template('todo.html')
+
 ##################
 # PROFILE HANDLER.
 ##################
