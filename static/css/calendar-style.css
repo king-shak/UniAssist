@@ -28,6 +28,7 @@ body {
   }
   #container {
     width: 770px;
+    padding-left: 3rem;
   }
   #weekdays {
     width: 100%;

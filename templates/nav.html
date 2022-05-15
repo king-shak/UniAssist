@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
    
-    <link rel="stylesheet" href="styles.css">
+    <link rel = 'stylesheet' href = '{{ url_for('static', filename='css/nav-styles.css') }}' />
     
   
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
@@ -35,21 +35,21 @@
 
                 <ul class="menu-links">
                     <li class="nav-link">
-                        <a href="#">
+                        <a href="{{ url_for('main.profile') }}">
                             <i class='bx bxs-user-account' ></i>
                             <span class="text nav-text">Account Setting</span>
                         </a>
                     </li>
 
                     <li class="nav-link">
-                        <a href="#">
+                        <a href="{{ url_for('main.viewTasks') }}">
                             <i class='bx bx-clipboard'></i>
                             <span class="text nav-text">To Do</span>
                         </a>
                     </li>
 
                     <li class="nav-link">
-                        <a href="#">
+                        <a href="{{ url_for('main.calendar') }}">
                             <i class='bx bxs-calendar' ></i>
                             <span class="text nav-text">Calendar</span>
                         </a>
@@ -81,13 +81,11 @@
 
             <div class="bottom-content">
                 <li class="">
-                    <a href="#">
+                    <a href="{{ url_for('auth.logout') }}">
                         <i class='bx bx-log-out icon' ></i>
                         <span class="text nav-text">Logout</span>
                     </a>
                 </li>
-
-                
             </div>
         </div>
 
@@ -95,6 +93,9 @@
 
     <section class="home">
         <div class="text">UniAssist</div>
+
+        {% block content %}
+        {% endblock %}
     </section>
 
     <script>
@@ -106,10 +107,9 @@
       modeText = body.querySelector(".mode-text");
 
 
-toggle.addEventListener("click" , () =>{
-    sidebar.classList.toggle("close");
-})
-
+    toggle.addEventListener("click" , () =>{
+        sidebar.classList.toggle("close");
+    })
     </script>
 
 </body>

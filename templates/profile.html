@@ -13,50 +13,53 @@
   }
 </style>
 
-{% extends "base.html" %}
+{% extends "nav.html" %}
 
 {% block content %}
-<!-- Profile Pic -->
 
-<form action="/updateProfilePic" method="post" enctype="multipart/form-data">
-  <label for="file-input">
-    <img src="{{ profilePicURL }}" class="profile-pic">
-  </label>
-  <input hidden="true" type="file" id="file-input" name="file" accept=".png,.jpg" onchange="form.submit()">
-</form>
+<div style="padding-left: 5rem;">
+  <!-- Profile Pic -->
 
-<!-- Name and Email -->
-<h1 class="title">
-  Welcome, {{ name }}!
-</h1>
+  <form action="/updateProfilePic" method="post" enctype="multipart/form-data">
+    <label for="file-input">
+      <img src="{{ profilePicURL }}" class="profile-pic">
+    </label>
+    <input hidden="true" type="file" id="file-input" name="file" accept=".png,.jpg" onchange="form.submit()">
+  </form>
 
-<h2 class="subtitle">
-  {{ email }}
-</h2>
+  <!-- Name and Email -->
+  <h1>
+    Welcome, {{ name }}!
+  </h1>
 
-<!-- Password Change -->
-<!-- <h1 class="title">
-  Change Password
-</h1>
+  <h3>
+    {{ email }}
+  </h3>
 
-<form action="/updatePassword" method="post">
-  <div class="grid-container">
-    <div class="grid-item">
-      <label for="curPassword">Current Password: </label>
-      <input type="text" name="curPassword">
+  <!-- Password Change -->
+  <!-- <h1 class="title">
+    Change Password
+  </h1>
+
+  <form action="/updatePassword" method="post">
+    <div class="grid-container">
+      <div class="grid-item">
+        <label for="curPassword">Current Password: </label>
+        <input type="text" name="curPassword">
+      </div>
+    
+      <div>
+        <label for="newPassword">New Password: </label>
+        <input type="text" name="newPassword">
+      </div>
+    
+      <div>
+        <label for="newPasswordAgain">New Password Again: </label>
+        <input type="text" name="newPasswordAgain">
+        <input type="submit" value="Update Password">
+      </div>
     </div>
-  
-    <div>
-      <label for="newPassword">New Password: </label>
-      <input type="text" name="newPassword">
-    </div>
-  
-    <div>
-      <label for="newPasswordAgain">New Password Again: </label>
-      <input type="text" name="newPasswordAgain">
-      <input type="submit" value="Update Password">
-    </div>
-  </div>
-</form> -->
+  </form> -->
+</div>
 
 {% endblock %}
