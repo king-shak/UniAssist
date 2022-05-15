@@ -17,7 +17,7 @@ from flask_login import current_user, login_required
 from werkzeug.utils import secure_filename
 
 from util import getCDNURLForS3Object, retrieveBucket, retrieveTable, getKeyFromCDNURL
-from constants import BUCKET_NAME, BUCKET_CDN_DOMAIN, PROFILE_PIC_ACL, USERS_TABLE_NAME, ALLOWED_EXTENSIONS, DEFAULT_PROFILE_PIC
+from constants import BUCKET_NAME, BUCKET_CDN_DOMAIN, PROFILE_PIC_ACL, USERS_TABLE_NAME, TASKS_TABLE_NAME, ALLOWED_EXTENSIONS, DEFAULT_PROFILE_PIC
 
 ################
 # AWS RESOURCES.
@@ -29,7 +29,7 @@ bucket = retrieveBucket(s3, BUCKET_NAME)
 
 # Grab the tables.
 usersTable = retrieveTable(USERS_TABLE_NAME)
-# TODO: Remaining tables.
+tasksTable = retrieveTable(TASKS_TABLE_NAME)
 
 #################
 # MAIN DEFINITON.
@@ -64,9 +64,59 @@ def calendar():
 # TO-DO HANDLER.
 ################
 
-@main.route('/todo')
-def todo():
-    return render_template('todo.html')
+def retrieveTasks(tasksTable, userID):
+    response = tasksTable.get_item(Key = {'email': userID})
+    tasks = None
+    if ('Item' in response): tasks = response['Item']['tasks']
+    if (tasks != None and len(tasks) == 0): tasks = None
+    return tasks
+
+@main.route('/viewTasks')
+@login_required
+def viewTasks():
+    # Render and return the template.
+    return render_template('todo.html', tasks=retrieveTasks(tasksTable, current_user.id))
+
+@main.route('/addTask', methods=['POST'])
+@login_required
+def addTask():
+    # Grab/form all the information.
+    taskName = request.form['new-task-input']
+    timestamp = f'{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")}'.encode('utf-8')
+    taskURI = str(hashlib.md5(timestamp).hexdigest())
+    newTask = [taskURI, taskName]
+
+    # Add this task to the existing list of tasks.
+    tasks = retrieveTasks(tasksTable, current_user.id)
+    if (tasks == None): tasks = [newTask]
+    else: tasks.append(newTask)
+
+    # Update the table.
+    item = {
+        'email': current_user.id,
+        'tasks': tasks
+    }
+    tasksTable.put_item(Item = item)
+
+    # Redirect them to the viewTasks endpoint.
+    return redirect(url_for('main.viewTasks'))
+
+@main.route('/deleteTask/<taskURI>', methods=['POST'])
+@login_required
+def deleteTask(taskURI):
+    # Retrieve the list of tasks, remove the one with the matching URI.
+    tasks = retrieveTasks(tasksTable, current_user.id)
+    if (tasks != None): tasks = [t for t in tasks if t[0] != taskURI]
+
+    # Update the table.
+    item = {
+        'email': current_user.id,
+        'tasks': tasks
+    }
+    tasksTable.put_item(Item = item)
+
+    # Redirect them to the viewTasks endpoint.
+    return redirect(url_for('main.viewTasks'))
 
 ##################
 # PROFILE HANDLER.

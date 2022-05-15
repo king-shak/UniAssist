@@ -14,6 +14,7 @@ BUCKET_CDN_DOMAIN = 'https://d1puw8wiol6e24.cloudfront.net'
 PROFILE_PIC_ACL = 'public-read'
 
 USERS_TABLE_NAME = 'project-skyd-users-table'
+TASKS_TABLE_NAME = 'project-skyd-tasks-table'
 
 ALLOWED_EXTENSIONS = {'.png', '.jpg'}
 

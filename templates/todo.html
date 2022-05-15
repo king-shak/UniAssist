@@ -12,17 +12,34 @@
 	
 	<header>
 		<h1>To Do List</h1>
-		<form id = 'new-task-form'>
+		<form action='/addTask' method='post' id='new-task-form'>
 			<input type = 'text' name = 'new-task-input' id = 'new-task-input' placeholder = 'What do you have planned?'' />
 			<input type = 'submit' id = 'new-task-submit' value = 'Add task' />
 		</form>
 	</header>
 	<main>
 		<section class = 'task-list'>
+			{% if tasks == None %}
+			<h2>No Tasks</h2>
+			{% else %}
 			<h2>Tasks</h2>
 
-			<div id = "tasks"></div>
-
+			<div id = "tasks">
+				{% for task in tasks %}
+				<div class="task">
+					<div class="content">
+						<p class="text">{{ task[1] }}</p>
+					</div>
+					<div class="actions">
+						<button class="edit"></button>
+						<form action="/deleteTask/{{ task[0] }}" method="post">
+							<input type="submit" class="delete" value="Delete">
+						</form>
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+			{% endif %}
 		</section>
 	</main>
 
