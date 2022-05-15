@@ -5,23 +5,24 @@
 ##########
 from flask import Flask
 from flask_login import LoginManager
+from pathlib import Path
 
 from auth import usersTable, auth as auth_blueprint
 from main import main as main_blueprint
 from models import User
-
-############
-# CONSTANTS.
-############
-SECRET_KEY = 'secret-key-goes-here'
+from constants import SECRET_KEY, UPLOAD_FOLDER
 
 ####################
 # BUILD APPLICATION.
 ####################
-application = Flask(__name__)       # Note this must be "application" for the EB env to pick it up.
+# First, make sure our upload folder exists.
+Path(UPLOAD_FOLDER).mkdir(parents=True, exist_ok=True)
+
+application = Flask(__name__)   # Note this must be "application" for the EB env to pick it up.
 
 # This has something to do with session management - idk what but DO NOT REMOVE.
 application.config['SECRET_KEY'] = SECRET_KEY
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Configure the login manager.
 login_manager = LoginManager()
@@ -43,5 +44,5 @@ application.register_blueprint(main_blueprint)
 # Run the app.
 if __name__ == '__main__':
     # TODO: Disable debugging for production.
-    application.debug = False
+    application.debug = True
     application.run()

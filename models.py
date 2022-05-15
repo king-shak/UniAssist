@@ -19,7 +19,22 @@ class User(UserMixin):
             user = response['Item']
             self.id = email
             self.name = user['name']
+            self.profilePicURL = user['profilePicURL']
             self.passwordHash = user['passwordHash']
             self.joinDate = user['joinDate']
         else:
             self.id = None  # The ID property can be checked to determine whether a user exists.
+    
+    def updateProfilePicURL(self, usersTable, newURL):
+        # First, update this object.
+        self.profilePicURL = newURL
+
+        # Now, update the entry in the table.
+        item = {
+            'email': self.id,
+            'name': self.name,
+            'profilePicURL': newURL,
+            'passwordHash': self.passwordHash,
+            'joinDate': self.joinDate,
+        }
+        usersTable.put_item(Item = item)

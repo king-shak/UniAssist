@@ -10,13 +10,10 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from main import usersTable
+from main import BUCKET_CDN_DOMAIN, usersTable
+from util import getCDNURLForS3Object
 from models import User
-
-############
-# CONSTANTS.
-############
-PASSWORD_HASH_METHOD = 'sha256'
+from constants import PASSWORD_HASH_METHOD, DEFAULT_PROFILE_PIC
 
 ########
 # SETUP.
@@ -68,6 +65,7 @@ def createUser(email, name, password):
     item = {
         'email': email,
         'name': name,
+        'profilePicURL': getCDNURLForS3Object(BUCKET_CDN_DOMAIN, DEFAULT_PROFILE_PIC),
         'passwordHash': generate_password_hash(password, method=PASSWORD_HASH_METHOD),
         'joinDate': today.strftime("%b %d %Y"),
     }

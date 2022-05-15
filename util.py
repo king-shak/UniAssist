@@ -8,20 +8,31 @@ import sys
 
 import boto3
 
-############
-# CONSTANTS.
-############
-
-# These are all used for connecting to the DynamoDB resource.
-REGION_NAME = "us-west-2"
-ROLE_ARN = "arn:aws:iam::336154851508:role/dynamodb-full-access-role-test"  # Hopefully we can use
-                                                                            # the same one for all
-                                                                            # of them...
-ROLE_SESSION_NAME = "RoleSessionName"   # This can be anything.
+from constants import REGION_NAME, ROLE_ARN, ROLE_SESSION_NAME
 
 ##########
 # METHODS.
 ##########
+
+# Retrieves a bucket given a S3 resource instance and the name of the bucket.
+def retrieveBucket(s3, bucketName):
+    # Make sure the bucket exists, just in case.
+    buckets = s3.buckets.all()
+    bucket = [cur for cur in buckets if cur.name == bucketName]
+    if (len(bucket) == 0):
+        # We don't own the bucket. See if we can still access it.
+        bucket = s3.Bucket(bucketName)
+        try:
+            # Run the head bucket operation to determine (a) if the bucket exists and (b) if we
+            # have access to it.
+            s3.meta.client.head_bucket(Bucket = bucketName)
+        except botocore.exceptions.ClientError as e:
+            # The bucket may exist, but even if it does, we don't have access to it.
+            print("ERROR: Unable to retrieve bucket \"{bucketName}\"".format(bucketName = bucketName))
+            sys.exit()
+
+    # Return the bucket.
+    return s3.Bucket(bucketName)
 
 # Retrieves a DynamoDB table given the name of the table.
 def retrieveTable(tableName):
@@ -67,3 +78,12 @@ def retrieveTable(tableName):
     
     # If we got here, we're good to go.
     return table
+
+# Methods for dealing with the CDN.
+def getCDNURLForS3Object(bucketCDNDomain, objectKey):
+    if (not bucketCDNDomain.endswith("/")): bucketCDNDomain += "/"
+    if (objectKey.startswith("/")): objectKey = objectKey[1:]
+    return bucketCDNDomain + objectKey
+
+def getKeyFromCDNURL(url):
+    return url[url.index(".net") + 5:]
