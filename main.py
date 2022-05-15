@@ -44,6 +44,14 @@ main = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
+#################
+# BUDGET HANDLER.
+#################
+
+@main.route('/budget')
+def budget():
+    return render_template('budget.html')
+
 ##################
 # PROFILE HANDLER.
 ##################
