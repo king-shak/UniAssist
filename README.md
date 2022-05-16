@@ -6,26 +6,26 @@ This is the source code for project SKYD! This was built by Shakeel Khan and Yes
 
 ## Project Goals
 
-This is our second hackathon, our first we did together was a week long, so part of the reason we participated is that we wanted to see what a 48-hour long hackathon looks like and how much we could accomplish with it. We also wanted to use this opportunity to learn a bit more about fullstack development, and possibly build something worthy of putting on our portfolios.
+This is our second hackathon, our first we did together was a weeklong, so part of the reason we participated is that we wanted to see what a 48-hour long hackathon looks like and how much we could accomplish with it. We also wanted to use this opportunity to learn a bit more about fullstack development, and possibly build something worthy of putting on our portfolios.
 
-For the project itself, we created a Web app called UniAssist, that is designed to help college students. Being college students ourselves, we understand that college students have a lot on their plate, such as finding an internship or job, organizing their life around their school work, budgeting their money and managing their student debt, organizaing assignments, setting deadlines, and keeping track of grades. We set out to create an all-in-one app that solves all of this.
+For the project itself, we created a Web app called UniAssist, that is designed to help college students. Being college students ourselves, we understand that college students have a lot on their plate, such as finding an internship or job, organizing their life around their schoolwork, budgeting their money and managing their student debt, organizing assignments, setting deadlines, and keeping track of grades. We set out to create an all-in-one app that solves all of this.
 
 ## Desired User Experience
 
-TODO: Fill this out.
+This app is designed to help college students with all the tools necessary for them to have an easier time managing their finances and their education. With features like calendar, Todo list, and the upcoming addition of note taking; students can stay up to date and on track on school assignments and events. With the future inclusion of budget tracker and debt calculator, students can also manage how much money they spend on a week or monthly basis to promote smarter money spending. More features will increase the productivity and allow students to have an easier experience at college. 
 
 ## Implementation Details
 
 We used the following tools for this project:
  * **Backend**: Python, Flask Web Framework, Boto3 API for accessing AWS.
  * **Middle**: AWS: DynamoDB, S3, Elastic Beanstalk, CloudFront CDN
- * **Frontend**: HTML + CSS, Javascript.
+ * **Frontend**: HTML + CSS, JavaScript.
 
 ### Backend
 
 For the backend, we chose Python because we're most comfortable with it for web development. We chose Flask mostly because it was the only web development framework we knew, but also because it's super lightweight and easy to work with compared to something like Django.
 
-Our Flask application was written using two blueprints: one in `auth.py` and the other in `main.py`. The former defined all the endpoints that deal with user session management (signing up, logging in/out) and the latter defined all the endpoints for the application (the todo list, profile page, calendar, etc.). `application.py` is where the application is put together and configured, and `util.py` contains various helper methods for working with AWS - things like retrieving an S3 bucket or DynamoDB table.
+Our Flask application was written using two blueprints: one in `auth.py` and the other in `main.py`. The former defined all the endpoints that deal with user session management (signing up, logging in/out) and the latter defined all the endpoints for the application (the Todo list, profile page, calendar, etc.). `application.py` is where the application is put together and configured, and `util.py` contains various helper methods for working with AWS - things like retrieving an S3 bucket or DynamoDB table.
 
 ### Middle
 
@@ -34,21 +34,21 @@ For the middle, we chose AWS because Shakeel, who did most of the backend work, 
  * We chose DynamoDB because it's a NoSQL database, which means the schema is very flexible. This made things easier for us, as we often had to make several changes to the schema on the fly as we were building the application. We have 3 tables:
     * A table for storing the users and all their information. This includes the date they joined the service, a hash of their password, a link to their profile picture (stored in our S3 bucket), their name and email address.
     * A table for the calendar events.
-    * And a table for the todo-list, storing all the items per user.
+    * And a table for the Todo-list, storing all the items per user.
 
  * We chose Elastic Beanstalk because it's super simple and it automatically does a lot for you - setting up an EC2 instances (your VM), setting up security groups and load balancers for your EC2 instances, as well as several other essential services for a web app. Deploying to it is as simple as running a single command in the terminal. Because of all this, we really felt no need to try something new.
 
- * We chose S3 because it's cheap, reliable, and has decent performance (at least for our needs). The S3 bucket is where we store the profile pictures of all the users. To increase performance of the bucket, we decided to use an CloudFront CDN distrbution, which essentially caches the data within the S3 bucket, making retrieval much quicker.
+ * We chose S3 because it's cheap, reliable, and has decent performance (at least for our needs). The S3 bucket is where we store the profile pictures of all the users. To increase performance of the bucket, we decided to use an CloudFront CDN distribution, which essentially caches the data within the S3 bucket, making retrieval much quicker.
 
 ### Frontend
 
-The frontend was plain HTML and CSS with some Javascript. We used some community-made CSS files to speed up the process of making things look nice. We didn't use anything fancy like Angular or React, but, we did make use of Flask's templating engine, Jinja2, effectively creating HTML templates that would be rendered upon request. For example, on the profile page, we used the templating engine to place the user's name, email address, and profile picture, into the HTML template for the profile page before it is then returned to the user.
+The frontend was plain HTML and CSS with some JavaScript. We used some community-made CSS files to speed up the process of making things look nice. We didn't use anything fancy like Angular or React, but we did make use of Flask's templating engine, Jinja2, effectively creating HTML templates that would be rendered upon request. For example, on the profile page, we used the templating engine to place the user's name, email address, and profile picture, into the HTML template for the profile page before it is then returned to the user.
 
-All the user interaction was done using HTML forms (as we weren't able to get the Websocket working - this is discussed in the next section) in the frontend, that would perform a POST request to the backend with all the form information. The little JavaScript used was mainly for small animations.
+All the user interaction was done using HTML forms (as we weren't able to get the WebSocket working - this is discussed in the next section) in the frontend, that would perform a POST request to the backend with all the form information. The little JavaScript used was mainly for small animations.
 
 ## Issues Encountered
 
-One of the issues encountered was trying to get [Websockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) working. We attempted to do this using the Flask-SocketIO extension and SocketIO on the client side (Javascript). While we were able to get this working locally, we couldn't get it to work in our Elastic Beanstalk environment. The Websocket would connect, but it would disconnect every 30 seconds, and we weren't able to send any data (the server never picked anything up, there weren't even any error messages we could find). We really wanted to get this going because one of the reasons you use a Websocket is that you can update things in real-time, you don't need to automatically refresh the page. We felt this would be better for the UX. We ended up spending too much time on this, and weren't able to get it working (part of the issue was the sparse documentation for stuff like when working with AWS). This is something we'll defintely be investigating afterwards.
+One of the issues encountered was trying to get [WebSockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) working. We attempted to do this using the Flask-SocketIO extension and SocketIO on the client side (JavaScript). While we were able to get this working locally, we couldn't get it to work in our Elastic Beanstalk environment. The WebSocket would connect, but it would disconnect every 30 seconds, and we weren't able to send any data (the server never picked anything up, there weren't even any error messages we could find). We really wanted to get this going because one of the reasons you use a WebSocket is that you can update things in real-time, you don't need to automatically refresh the page. We felt this would be better for the UX. We ended up spending too much time on this and weren't able to get it working (part of the issue was the sparse documentation for stuff like when working with AWS). This is something we'll definitely be investigating afterwards.
 
 ## Bugs
 
@@ -60,11 +60,11 @@ Here are the ongoing and fixed bugs.
 
 ### Ongoing
 
- * For some reason the logout button disappears when viewing the todo list.
+ * For some reason the logout button disappears when viewing the Todo list.
 
 ## Future Work
 
-Almost all of this is what we originally set out for, but weren't able to accomplish in the time frame.
+Almost all of this is what we originally set out for but weren't able to accomplish in the time frame.
 
  * Implementing the following features:
     * Notes.
@@ -87,7 +87,7 @@ Almost all of this is what we originally set out for, but weren't able to accomp
     * Ability to edit events.
  * Better quality control over the UI (keeping colors, fonts, and general layout consistent throughout the site).
  * Huge refactoring to code - optimizing DB queries to minimize bandwidth and costs, cleaning up the HTML, CSS, and JS.
- * Working out Websockets so adding an event or item on a to-do list can be done in real time, without refreshing the page.
+ * Working out WebSockets so adding an event or item on a to-do list can be done in real time, without refreshing the page.
  * A proper 404 page.
 
 # Developer Documentation
