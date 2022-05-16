@@ -6,7 +6,9 @@ This is the source code for project SKYD! This was built by Shakeel Khan and Yes
 
 ## Project Goals
 
-TODO: Fill this out.
+This is our second hackathon, our first we did together was a week long, so part of the reason we participated is that we wanted to see what a 48-hour long hackathon looks like and how much we could accomplish with it. We also wanted to use this opportunity to learn a bit more about fullstack development, and possibly build something worthy of putting on our portfolios.
+
+For the project itself, we created a Web app called UniAssist, that is designed to help college students. Being college students ourselves, we understand that college students have a lot on their plate, such as finding an internship or job, organizing their life around their school work, budgeting their money and managing their student debt, organizaing assignments, setting deadlines, and keeping track of grades. We set out to create an all-in-one app that solves all of this.
 
 ## Desired User Experience
 
@@ -14,11 +16,39 @@ TODO: Fill this out.
 
 ## Implementation Details
 
-TODO: Fill this out (this will take time).
+We used the following tools for this project:
+ * **Backend**: Python, Flask Web Framework, Boto3 API for accessing AWS.
+ * **Middle**: AWS: DynamoDB, S3, Elastic Beanstalk, CloudFront CDN
+ * **Frontend**: HTML + CSS, Javascript.
+
+### Backend
+
+For the backend, we chose Python because we're most comfortable with it for web development. We chose Flask mostly because it was the only web development framework we knew, but also because it's super lightweight and easy to work with compared to something like Django.
+
+Our Flask application was written using two blueprints: one in `auth.py` and the other in `main.py`. The former defined all the endpoints that deal with user session management (signing up, logging in/out) and the latter defined all the endpoints for the application (the todo list, profile page, calendar, etc.). `application.py` is where the application is put together and configured, and `util.py` contains various helper methods for working with AWS - things like retrieving an S3 bucket or DynamoDB table.
+
+### Middle
+
+For the middle, we chose AWS because Shakeel, who did most of the backend work, had the most experience with AWS. We both know from experience that deploying to the cloud can be difficult at times, so we wanted to stick with something we knew so we could focus more on building the app and less on troubleshooting.
+
+ * We chose DynamoDB because it's a NoSQL database, which means the schema is very flexible. This made things easier for us, as we often had to make several changes to the schema on the fly as we were building the application. We have 3 tables:
+    * A table for storing the users and all their information. This includes the date they joined the service, a hash of their password, a link to their profile picture (stored in our S3 bucket), their name and email address.
+    * A table for the calendar events.
+    * And a table for the todo-list, storing all the items per user.
+
+ * We chose Elastic Beanstalk because it's super simple and it automatically does a lot for you - setting up an EC2 instances (your VM), setting up security groups and load balancers for your EC2 instances, as well as several other essential services for a web app. Deploying to it is as simple as running a single command in the terminal. Because of all this, we really felt no need to try something new.
+
+ * We chose S3 because it's cheap, reliable, and has decent performance (at least for our needs). The S3 bucket is where we store the profile pictures of all the users. To increase performance of the bucket, we decided to use an CloudFront CDN distrbution, which essentially caches the data within the S3 bucket, making retrieval much quicker.
+
+### Frontend
+
+The frontend was plain HTML and CSS with some Javascript. We used some community-made CSS files to speed up the process of making things look nice. We didn't use anything fancy like Angular or React, but, we did make use of Flask's templating engine, Jinja2, effectively creating HTML templates that would be rendered upon request. For example, on the profile page, we used the templating engine to place the user's name, email address, and profile picture, into the HTML template for the profile page before it is then returned to the user.
+
+All the user interaction was done using HTML forms (as we weren't able to get the Websocket working - this is discussed in the next section) in the frontend, that would perform a POST request to the backend with all the form information. The little JavaScript used was mainly for small animations.
 
 ## Issues Encountered
 
-TODO: Fill this out. This should be done as we're going along.
+One of the issues encountered was trying to get [Websockets](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) working. We attempted to do this using the Flask-SocketIO extension and SocketIO on the client side (Javascript). While we were able to get this working locally, we couldn't get it to work in our Elastic Beanstalk environment. The Websocket would connect, but it would disconnect every 30 seconds, and we weren't able to send any data (the server never picked anything up, there weren't even any error messages we could find). We really wanted to get this going because one of the reasons you use a Websocket is that you can update things in real-time, you don't need to automatically refresh the page. We felt this would be better for the UX. We ended up spending too much time on this, and weren't able to get it working (part of the issue was the sparse documentation for stuff like when working with AWS). This is something we'll defintely be investigating afterwards.
 
 ## Bugs
 
@@ -26,15 +56,39 @@ Here are the ongoing and fixed bugs.
 
 ### Fixed
 
-TODO: Fill this out. This should be done as we're going along.
+ * 
 
 ### Ongoing
 
-TODO: Fill this out. This should be done as we're going along.
+ * For some reason the logout button disappears when viewing the todo list.
 
 ## Future Work
 
-TODO: Fill this out.
+Almost all of this is what we originally set out for, but weren't able to accomplish in the time frame.
+
+ * Implementing the following features:
+    * Notes.
+    * Budget Tracker.
+    * Debt Calculator.
+ * Account settings page:
+    * Adding functionality to update password.
+    * Force the profile picture to always be round.
+    * Have an edit icon appear when the mouse is hovered over the profile picture (to make it more obvious).
+    * Ability to link Canvas account to pull assignments from for the To-Do list and calendar.
+ * To-Do:
+    * Ability to add date and time to task.
+    * Ability to edit task.
+    * Ability to have multiple lists.
+ * Calendar:
+    * Ability to have more than on event per day on Calendar.
+    * Ability to set times on schedule.
+    * Ability to view full schedule by selecting a day.
+    * Ability to color code events.
+    * Ability to edit events.
+ * Better quality control over the UI (keeping colors, fonts, and general layout consistent throughout the site).
+ * Huge refactoring to code - optimizing DB queries to minimize bandwidth and costs, cleaning up the HTML, CSS, and JS.
+ * Working out Websockets so adding an event or item on a to-do list can be done in real time, without refreshing the page.
+ * A proper 404 page.
 
 # Developer Documentation
 
