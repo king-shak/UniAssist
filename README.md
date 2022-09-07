@@ -1,6 +1,6 @@
 # UniAssist
 
-This is the source code for project SKYD! This was built by Shakeel Khan and Yeshwanth Dhanasekar for the 2022 UWB Hacks the Cloud Hackathon.
+This is the source code for UniAssist! This was built by Shakeel Khan and Yeshwanth Dhanasekar for the 2022 UWB Hacks the Cloud Hackathon.
 
 # General Documentation
 
